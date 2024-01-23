@@ -7,5 +7,7 @@ import com.complemento.inventory.response.CategoryResposeRest;
 public interface ICategoryService {
 	
 	public ResponseEntity<CategoryResposeRest> search();
+	
+	public ResponseEntity<CategoryResposeRest> searchById(Long id);
 
 }
