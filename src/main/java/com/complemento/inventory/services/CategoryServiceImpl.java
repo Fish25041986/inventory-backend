@@ -68,6 +68,7 @@ public class CategoryServiceImpl implements ICategoryService {
 	@Override
 	@Transactional
 	public ResponseEntity<CategoryResposeRest> save(Category category) {
+		
 		CategoryResposeRest response= new CategoryResposeRest();
 		List<Category> list=new ArrayList<>(); 
 		
@@ -78,6 +79,46 @@ public class CategoryServiceImpl implements ICategoryService {
 			if(categorySave !=null) {
 				list.add(categorySave);
 				response.getCategoryResponse().setCategoria(list);
+			}else {
+				response.setDatos(" no ok", "-0", "Categoria no guardada");
+				return new ResponseEntity<CategoryResposeRest>(response, HttpStatus.BAD_REQUEST);
+			}
+			
+		}catch (Exception e) {
+			response.setDatos(" no ok", "-0", "error al guardar");
+			e.getStackTrace();
+			return new ResponseEntity<CategoryResposeRest>(response, HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<CategoryResposeRest>(response, HttpStatus.OK);
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<CategoryResposeRest> update(Category category, Long id) {
+
+		CategoryResposeRest response= new CategoryResposeRest();
+		List<Category> list=new ArrayList<>(); 
+		
+		try {
+			
+			Optional<Category> categoriasearch = categoryDao.findById(id);
+			
+			if(categoriasearch.isPresent()) {
+				categoriasearch.get().setName(category.getName());
+				categoriasearch.get().setDescription(category.getDescription());
+				
+				Category categoryToUpdate= categoryDao.save(categoriasearch.get());
+				
+				if(categoryToUpdate !=null) {
+					
+				 list.add(categoryToUpdate);
+				 response.getCategoryResponse().setCategoria(list);
+				 response.setDatos("Respuesta Ok", "00", "Categoria Actulaizada");
+				}else {
+				 response.setDatos("Respuesta no ok", "-1", "Categoria no actualizada");
+				 return new ResponseEntity<CategoryResposeRest>(response, HttpStatus.BAD_REQUEST);
+				}
+				
 			}else {
 				response.setDatos(" no ok", "-0", "Categoria no guardada");
 				return new ResponseEntity<CategoryResposeRest>(response, HttpStatus.BAD_REQUEST);
