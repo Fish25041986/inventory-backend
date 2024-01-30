@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.boot.Metadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -126,6 +127,23 @@ public class CategoryServiceImpl implements ICategoryService {
 			
 		}catch (Exception e) {
 			response.setDatos(" no ok", "-0", "error al guardar");
+			e.getStackTrace();
+			return new ResponseEntity<CategoryResposeRest>(response, HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<CategoryResposeRest>(response, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<CategoryResposeRest> deleteByid(Long id) {
+		
+		CategoryResposeRest response= new CategoryResposeRest();
+		
+		try {
+			categoryDao.deleteById(id);
+			response.setDatos("Repuesta ok", "00", "registro eliminado");
+			
+		}catch (Exception e) {
+			response.setDatos(" no ok", "-1", "error al eliminar");
 			e.getStackTrace();
 			return new ResponseEntity<CategoryResposeRest>(response, HttpStatus.NOT_FOUND);
 		}
